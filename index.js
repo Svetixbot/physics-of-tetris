@@ -5,7 +5,7 @@ var Bodies = matter.Bodies,
     Render = matter.Render,
     World  = matter.World,
     Events = matter.Events,
-    Bounds = matter.Bounds;
+    Body   = matter.Body;
 
 var engine = Engine.create(),
     world  = engine.world;
@@ -17,7 +17,6 @@ var render = Render.create({
     options: {
       width: Math.min(document.documentElement.clientWidth, 800),
       height: Math.min(document.documentElement.clientHeight, 600),
-      showAxes: true,
       showCollisions: true,
       showConvexHulls: true,
       wireframes: false
@@ -27,6 +26,19 @@ var render = Render.create({
 Engine.run(engine);
 Render.run(render);
   
+
+var createOTetrimino = function () {
+
+  var oTetrimino = Body.create( { parts: [
+      Bodies.rectangle(390, 10, 20, 20),
+      Bodies.rectangle(410, 30, 20, 20),
+      Bodies.rectangle(410, 10, 20, 20),
+      Bodies.rectangle(390, 30, 20, 20)]});
+
+  return oTetrimino;
+}  
+
+
 var top = Bodies.rectangle(400, 0, 400, 50, { isStatic: true, label: "top"})
 
 World.add(world, [
@@ -37,8 +49,7 @@ World.add(world, [
 ]);
 
 var addBall = function() {
-  var center = Bodies.circle(400, 0, 20);
-  World.add(world, [center]);
+  World.add(world, [createOTetrimino()]);
 }
 
 var morePlease = true
@@ -50,9 +61,6 @@ Events.on(engine, 'collisionStart', function(event) {
 
     for (var i = 0; i < pairs.length; i++) {
       var pair = pairs[i];
-      pair.bodyA.render.fillStyle = '#333';
-      pair.bodyB.render.fillStyle = '#333';
-
       if (pair.bodyA === top || pair.bodyB === top)
         morePlease = false;
     }
